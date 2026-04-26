@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>YT Spark - Free AI YouTube Tools for Creators</title>
+    <meta name="description" content="Free AI-powered YouTube title generator, channel name maker, description writer, and tag generator. Boost your YouTube growth with our free tools.">
+    <meta name="keywords" content="YouTube tools, AI title generator, channel name generator, YouTube SEO, free YouTube tools">
+    <meta name="author" content="Garvit">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230f172a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%233b82f6' font-family='Arial'%3E⚡%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            color: #0f172a;
+            line-height: 1.5;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #eef2ff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 1.5rem;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+
+        .logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0f172a, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #475569;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .nav-link:hover {
+            background: #eef2ff;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.cta {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
+
+        .nav-link.cta:hover {
+            background: #1e293b;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem 4rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 30px;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0f172a, #3b82f6, #8b5cf6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #475569;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #0f172a;
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 2.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #1e293b;
+            transform: scale(0.97);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #0f172a;
+            padding: 0.8rem 1.8rem;
+            border-radius: 2.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: #f8fafc;
+            transform: scale(0.97);
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid #eef2ff;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 800px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero h1 { font-size: 2rem; }
+        }
+
+        /* Tools Grid Section */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            border: 1px solid #eef2ff;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+            border-color: #cbd5e1;
+        }
+
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-card p {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: #3b82f6;
+            margin-bottom: 1rem;
+        }
+
+        .feature h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            color: #64748b;
+            font-size: 0.8rem;
+        }
+
+        /* FAQ Section */
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #eef2ff;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .faq-question:hover {
+            background: #f8fafc;
+        }
+
+        .faq-question i {
+            color: #3b82f6;
+            transition: transform 0.2s;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #64748b;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1rem;
+            max-height: 300px;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 2rem;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section .btn-primary {
+            background: white;
+            color: #0f172a;
+        }
+
+        .cta-section .btn-primary:hover {
+            background: #f8fafc;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eef2ff;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.75rem;
+        }
+
+        .footer-links a:hover {
+            color: #3b82f6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate {
+            animation: fadeIn 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <span class="logo-icon">⚡</span>
+            <span class="logo-text">YT Spark</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="blog.html" class="nav-link">Blog</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="contact.html" class="nav-link">Contact</a>
+            <a href="privacy-policy.html" class="nav-link">Privacy</a>
+            <a href="tools.html" class="nav-link cta">Launch Tools →</a>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <!-- Hero Section -->
+    <div class="container">
+        <div class="hero animate">
+            <div class="hero-badge">
+                <i class="fas fa-robot"></i> AI-Powered • 100% Free
+            </div>
+            <h1>Supercharge Your YouTube<br>Channel with AI Tools</h1>
+            <p>Generate viral titles, brandable channel names, SEO descriptions, and high-ranking tags — all for free. Used by 10,000+ creators worldwide.</p>
+            <div class="hero-buttons">
+                <a href="tools.html" class="btn-primary"><i class="fas fa-rocket"></i> Start Creating Free</a>
+                <a href="#features" class="btn-outline"><i class="fas fa-play-circle"></i> Watch Demo</a>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Happy Creators</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">500K+</div>
+                <div class="stat-label">Titles Generated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">4.9</div>
+                <div class="stat-label">⭐ User Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Free Access</div>
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <h2 class="section-title">⚙️ Free YouTube Creator Tools</h2>
+        <div class="tools-grid">
+            <a href="title_suggest.html" class="tool-card">
+                <div class="tool-icon">🔥</div>
+                <h3>Viral Title Lab</h3>
+                <p>Generate click-worthy YouTube titles using AI. High CTR guaranteed.</p>
+                <span style="color: #3b82f6; font-size: 0.8rem; margin-top: 0.5rem; display: inline-block;">Try Now →</span>
+            </a>
+            <a href="title_suggest.html" class="tool-card">
+                <div class="tool-icon">🏷️</div>
+                <h3>Channel Name Studio</h3>
+                <p>Create brandable, memorable channel names for your niche.</p>
+                <span style="color: #3b82f6; font-size: 0.8rem; margin-top: 0.5rem; display: inline-block;">Try Now →</span>
+            </a>
+            <a href="desc_write.html" class="tool-card">
+                <div class="tool-icon">📝</div>
+                <h3>SEO Description Writer</h3>
+                <p>AI-powered video descriptions with hashtags and CTAs.</p>
+                <span style="color: #3b82f6; font-size: 0.8rem; margin-top: 0.5rem; display: inline-block;">Try Now →</span>
+            </a>
+            <a href="tags.html" class="tool-card">
+                <div class="tool-icon">🏷️</div>
+                <h3>Tag Generator</h3>
+                <p>15+ high-ranking SEO tags for better discoverability.</p>
+                <span style="color: #3b82f6; font-size: 0.8rem; margin-top: 0.5rem; display: inline-block;">Try Now →</span>
+            </a>
+        </div>
+
+        <!-- Features Section -->
+        <h2 id="features" class="section-title">✨ Why Choose YT Spark?</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
+                <h4>Advanced AI Technology</h4>
+                <p>Powered by Pollinations.ai neural networks for unique, high-quality results every time.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-infinity"></i></div>
+                <h4>100% Free Forever</h4>
+                <p>No hidden costs, no credit card required. All tools are completely free.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h4>Lightning Fast</h4>
+                <p>Results in seconds. No waiting, no queues. Instant AI generation.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                <h4>Proven Results</h4>
+                <p>Titles generated by our AI have helped channels gain millions of views.</p>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <h2 class="section-title">❓ Frequently Asked Questions</h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is YT Spark really free?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes! YT Spark is completely free forever. No hidden fees, no premium tiers, no credit card required. We believe every creator deserves access to powerful tools.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How does the AI work?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Our tools use Pollinations.ai's advanced neural networks trained on millions of successful YouTube videos. The AI analyzes viral patterns, trending keywords, and engagement metrics to generate unique, high-performing titles and content.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Do I need to create an account?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    No! Use all tools instantly without signing up. No email, no password, no tracking — just pure AI tools at your fingertips.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Are the titles original?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, every generation is unique. The AI creates new combinations based on your input, ensuring you get fresh, original titles every time.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I use these for monetized channels?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Absolutely! Many monetized creators use our tools daily. All content generated is original and ready for commercial use.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is there a limit on generations?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    No limits! Generate as many titles, names, descriptions, and tags as you need. Use our tools 24/7 without restrictions.
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <h2>Ready to Grow Your Channel? 🚀</h2>
+            <p>Join thousands of creators already using YT Spark to boost their YouTube presence.</p>
+            <a href="tools.html" class="btn-primary"><i class="fas fa-arrow-right"></i> Launch Free Tools Now</a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="tools.html">Tools</a>
+                <a href="blog.html">Blog</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+                <a href="privacy-policy.html">Privacy Policy</a>
+            </div>
+            <p>© 2026 YT Spark | Created with ❤️ by <strong>Garvit</strong></p>
+            <p style="margin-top: 0.5rem;">Powered by Pollinations.ai • Neural Network Technology</p>
+        </footer>
+    </div>
+</main>
+
+<script>
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const parent = question.parentElement;
+            parent.classList.toggle('active');
+        });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+</script>
+</body>
+</html>
