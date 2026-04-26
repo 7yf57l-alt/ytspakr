@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>YT Spark — AI Description Writer</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230f172a'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%233b82f6' font-family='Arial'%3E⚡%3C/text%3E%3C/svg%3E">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f8fafc; font-family: 'Inter', sans-serif; color: #0f172a; line-height: 1.5; padding: 2rem 1.5rem; }
+        .container { max-width: 1280px; margin: 0 auto; }
+        
+        /* Top Network Bar */
+        .network-bar { background: white; border-radius: 3rem; padding: 0.5rem 1rem; margin-bottom: 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; border: 1px solid #eef2ff; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
+        .network-link { display: flex; align-items: center; gap: 8px; padding: 0.5rem 1.2rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 500; color: #475569; text-decoration: none; transition: all 0.2s; background: #f8fafc; border: 1px solid #e2e8f0; }
+        .network-link:hover { background: #eef2ff; transform: translateY(-1px); }
+        .network-link.active { background: #0f172a; color: white; border-color: #0f172a; }
+        
+        .header { text-align: center; margin-bottom: 2.5rem; }
+        .badge { display: inline-block; background: #eef2ff; color: #4f46e5; font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 30px; margin-bottom: 1rem; }
+        h1 { font-size: 2.8rem; font-weight: 700; background: linear-gradient(135deg, #0f172a, #3b82f6); background-clip: text; -webkit-background-clip: text; color: transparent; margin-bottom: 0.5rem; }
+        .subhead { color: #475569; font-size: 1.1rem; max-width: 550px; margin: 0 auto; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
+        
+        .card { background: white; border-radius: 1.75rem; box-shadow: 0 12px 30px rgba(0,0,0,0.05); padding: 1.8rem; transition: all 0.2s; border: 1px solid #eef2ff; }
+        .card:hover { box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1); border-color: #cbd5e1; }
+        .card-icon { font-size: 1.8rem; color: #3b82f6; margin-bottom: 0.75rem; }
+        .card h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.25rem; color: #0f172a; }
+        .card-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 1.5rem; border-left: 2px solid #e2e8f0; padding-left: 0.75rem; }
+        
+        .input-group { margin-bottom: 1.25rem; }
+        label { font-size: 0.85rem; font-weight: 500; color: #334155; display: block; margin-bottom: 0.4rem; }
+        textarea, input { width: 100%; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 0.85rem 1rem; font-family: 'Inter', monospace; font-size: 0.95rem; background: white; transition: all 0.2s; color: #0f172a; resize: vertical; }
+        textarea:focus, input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        
+        .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0 1rem; }
+        .chip { background: #f1f5f9; padding: 0.3rem 0.9rem; border-radius: 40px; font-size: 0.75rem; font-weight: 500; color: #1e293b; cursor: pointer; transition: all 0.15s; border: 1px solid #e2e8f0; }
+        .chip:hover { background: #e6edf5; transform: translateY(-1px); border-color: #94a3b8; }
+        
+        .btn-group { display: flex; gap: 0.75rem; margin: 1rem 0 1.25rem; flex-wrap: wrap; }
+        .btn { border: none; padding: 0.6rem 1.2rem; border-radius: 2rem; font-weight: 500; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; }
+        .btn-primary { background: #0f172a; color: white; }
+        .btn-primary:hover { background: #1e293b; transform: scale(0.97); }
+        
+        .result-area { margin-top: 0.5rem; background: #fefefe; border-radius: 1.2rem; min-height: 320px; }
+        .result-item { background: #fafcff; border-radius: 1rem; padding: 0.85rem 1rem; margin-bottom: 0.7rem; display: flex; justify-content: space-between; align-items: center; gap: 12px; border: 1px solid #edf2f7; transition: all 0.15s; animation: fadeSlide 0.2s ease-out; }
+        .result-item:hover { background: white; border-color: #cbd5e1; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .result-text { font-weight: 500; font-size: 0.9rem; color: #0f172a; word-break: break-word; flex: 1; line-height: 1.4; white-space: pre-wrap; }
+        .copy-btn { background: none; border: none; color: #64748b; font-size: 0.9rem; cursor: pointer; padding: 6px 10px; border-radius: 30px; transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+        .copy-btn:hover { background: #f1f5f9; color: #3b82f6; }
+        
+        .footer-note { text-align: center; font-size: 0.75rem; color: #94a3b8; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eef2ff; }
+        .copyright { margin-top: 0.5rem; font-size: 0.7rem; color: #94a3b8; }
+        .ai-badge { display: inline-flex; align-items: center; gap: 6px; background: #dcfce7; color: #166534; padding: 0.2rem 0.8rem; border-radius: 30px; font-size: 0.7rem; margin-left: 0.5rem; }
+        
+        .thinking-container { text-align: left; padding: 1.5rem; background: #f8fafc; border-radius: 1rem; animation: fadeSlide 0.2s ease-out; }
+        .thinking-step { display: flex; align-items: center; gap: 12px; padding: 0.6rem 0; border-bottom: 1px solid #eef2ff; animation: slideIn 0.3s ease-out; }
+        .thinking-step:last-child { border-bottom: none; }
+        .thinking-step-icon { width: 28px; text-align: center; font-size: 1rem; }
+        .thinking-step-text { flex: 1; font-size: 0.85rem; color: #475569; }
+        .thinking-step.active .thinking-step-text { color: #0f172a; font-weight: 500; }
+        .thinking-step.completed .thinking-step-text { color: #10b981; }
+        .thinking-dots { display: inline-flex; gap: 4px; margin-left: 8px; }
+        .thinking-dots span { width: 4px; height: 4px; background: #3b82f6; border-radius: 50%; display: inline-block; animation: dotPulse 1.2s infinite; }
+        .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotPulse { 0%,60%,100% { transform: scale(0.8); opacity: 0.4; } 30% { transform: scale(1.2); opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .thinking-progress { margin-top: 1rem; height: 3px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+        .thinking-progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 3px; width: 0%; transition: width 0.3s ease; }
+        .empty-state { color: #94a3b8; font-size: 0.85rem; padding: 1rem; text-align: center; background: #f8fafc; border-radius: 1rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="network-bar">
+        <a href="title_suggest.html" class="network-link"><i class="fas fa-fire"></i> Viral Titles & Channels</a>
+        <a href="desc_write.html" class="network-link active"><i class="fas fa-align-left"></i> Description Writer</a>
+        <a href="tags.html" class="network-link"><i class="fas fa-tags"></i> Tag Generator</a>
+    </div>
+
+    <div class="header">
+        <div class="badge"><i class="fas fa-align-left"></i> <span class="ai-badge"><i class="fas fa-brain"></i>AI-Powered</span></div>
+        <h1>📝 SEO Description Writer</h1>
+        <div class="subhead">AI-powered video descriptions • Optimized for engagement & rankings</div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-pen-fancy"></i></div>
+            <h2>Generate Description</h2>
+            <div class="card-desc">SEO-optimized • Call to action • Hashtags included</div>
+            
+            <div class="input-group">
+                <label><i class="fas fa-heading"></i> Video title / topic</label>
+                <textarea id="descInput" rows="3" placeholder="e.g., 5 ways to grow your YouTube channel"></textarea>
+            </div>
+
+            <div class="suggestions">
+                <div class="chip" data-desc="How to get 1000 subscribers fast">📈 1000 subscribers</div>
+                <div class="chip" data-desc="Best camera for YouTube beginners">📷 camera review</div>
+                <div class="chip" data-desc="Video editing tips for creators">✂️ editing tips</div>
+                <div class="chip" data-desc="How to make money on YouTube">💰 monetization</div>
+            </div>
+
+            <div class="btn-group">
+                <button id="genDescBtn" class="btn btn-primary"><i class="fas fa-microchip"></i> Generate with AI</button>
+            </div>
+
+            <div class="result-area" id="descResultArea">
+                <div id="descList"><div class="empty-state"><i class="fas fa-chart-line"></i> Enter a topic & click "Generate with AI"</div></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+            <h2>Trending Ideas</h2>
+            <div class="card-desc">Viral topics for better engagement</div>
+            <div class="suggestions">
+                <div class="chip" data-desc="YouTube algorithm explained 2026">📊 Algorithm secrets</div>
+                <div class="chip" data-desc="Day in the life of a YouTuber">🎬 Day in life</div>
+                <div class="chip" data-desc="How to go viral on YouTube">⚡ Go viral tips</div>
+                <div class="chip" data-desc="YouTube monetization requirements">💰 Monetization 2026</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        <i class="fas fa-brain"></i> Powered by Pollinations.ai • Neural network processing
+        <div class="copyright">© 2026 YT Spark | Created with ❤️ by <strong>Garvit</strong></div>
+    </div>
+</div>
+
+<script>
+    async function callAI(prompt) {
+        const response = await fetch('https://text.pollinations.ai/openai', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: [{ role: 'user', content: prompt }], model: 'openai', temperature: 0.85 })
+        });
+        const data = await response.json();
+        return data.choices[0].message.content;
+    }
+
+    async function generateDescription() {
+        const topic = document.getElementById('descInput').value.trim();
+        if (!topic) { alert('Enter a video topic!'); return; }
+        document.getElementById('descList').innerHTML = '<div class="thinking-container"><div class="thinking-step active"><div class="thinking-step-icon"><i class="fas fa-spinner fa-pulse"></i></div><div class="thinking-step-text">AI writing SEO description...<span class="thinking-dots"><span></span><span></span><span></span></span></div></div></div>';
+        try {
+            const result = await callAI(`Write a YouTube video description for "${topic}". Include an engaging hook, content summary, call to action, and relevant hashtags. Keep it professional but friendly.`);
+            renderDescription(result);
+        } catch(e) { document.getElementById('descList').innerHTML = '<div class="empty-state">Error. Try again.</div>'; }
+    }
+
+    function renderDescription(text) {
+        const container = document.getElementById('descList');
+        container.innerHTML = `<div class="result-item"><span class="result-text">📝 ${escapeHtml(text)}</span><button class="copy-btn" data-copy="${escapeHtml(text)}">📋 Copy</button></div>`;
+        attachCopyEvents(container);
+    }
+
+    function attachCopyEvents(container) {
+        container.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const text = btn.getAttribute('data-copy');
+                if (text) { await navigator.clipboard.writeText(text); btn.innerHTML = '<i class="fas fa-check"></i> Copied!'; setTimeout(() => btn.innerHTML = '📋 Copy', 1500); }
+            });
+        });
+    }
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+
+    document.getElementById('genDescBtn').addEventListener('click', generateDescription);
+    document.querySelectorAll('[data-desc]').forEach(chip => {
+        chip.addEventListener('click', () => { document.getElementById('descInput').value = chip.getAttribute('data-desc'); generateDescription(); });
+    });
+
+    document.getElementById('descInput').value = '5 proven ways to grow your YouTube channel';
+    setTimeout(generateDescription, 500);
+</script>
+</body>
+</html>
